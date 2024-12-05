@@ -1,0 +1,9 @@
+*.h5 filter=lfs diff=lfs merge=lfs -text
+mnli_fisher.h5 filter=lfs diff=lfs merge=lfs -text
+roberta-base-MNLI.h5 filter=lfs diff=lfs merge=lfs -text
+roberta-base-RTE.h5 filter=lfs diff=lfs merge=lfs -text
+roberta-base-squad2.h5 filter=lfs diff=lfs merge=lfs -text
+roberta-base.h5 filter=lfs diff=lfs merge=lfs -text
+roberta-large.h5 filter=lfs diff=lfs merge=lfs -text
+xlm-roberta-base.h5 filter=lfs diff=lfs merge=lfs -text
+bert_cased_fisher.h5 filter=lfs diff=lfs merge=lfs -text
