@@ -7,3 +7,5 @@ roberta-base.h5 filter=lfs diff=lfs merge=lfs -text
 roberta-large.h5 filter=lfs diff=lfs merge=lfs -text
 xlm-roberta-base.h5 filter=lfs diff=lfs merge=lfs -text
 bert_cased_fisher.h5 filter=lfs diff=lfs merge=lfs -text
+.*h5 filter=lfs diff=lfs merge=lfs -text
+*.5 filter=lfs diff=lfs merge=lfs -text
