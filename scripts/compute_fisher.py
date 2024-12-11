@@ -13,9 +13,8 @@ from model_merging import hdf5_util
 
 FLAGS = flags.FLAGS
 
-token = os.getenv("HF_AUTH_TOKEN")
+token = os.getenv("YOU_HF_TOKEN") #ignore if not needed
 
-# TODO: Add descriptions to flags
 flags.DEFINE_string("model", None, "")
 flags.DEFINE_string("glue_task", None, "")
 flags.DEFINE_string("fisher_path", None, "Path of hdf5 file to save Fisher to.")

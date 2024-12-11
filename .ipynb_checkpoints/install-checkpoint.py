@@ -1,11 +1,11 @@
 import logging
 from transformers import AutoModel, AutoTokenizer
 import os
-os.environ['HF_HOME'] = '/root/autodl-tmp/cache/'
-# 启用日志
+os.environ['HF_HOME'] = '/root/autodl-tmp/cache/' # replace with your own location
+
 logging.basicConfig(level=logging.INFO)
 
-# 下载模型和分词器
+# download model
 model_name = "sgugger/glue-mrpc"
 model = AutoModel.from_pretrained(model_name)
 tokenizer = AutoTokenizer.from_pretrained(model_name)

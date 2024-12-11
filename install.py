@@ -1,7 +1,7 @@
 import logging
 from transformers import AutoModel, AutoTokenizer
 import os
-os.environ['HF_HOME'] = '/root/autodl-tmp/cache/' #change to your own location
+os.environ['HF_HOME'] = '/root/autodl-tmp/cache/' #replace with your own location
 
 logging.basicConfig(level=logging.INFO)
 

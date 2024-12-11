@@ -33,7 +33,6 @@ def save_variables_to_hdf5(variables, filepath):
 def load_variables_from_hdf5(filepath, trainable=None):
     with h5py.File(filepath, "r") as f:
         if _LIST_GROUP_NAME not in f or len(f.keys()) > 1:
-            # TODO: Support other nested structures for both writing and reading.
             raise ValueError(
                 "Restoring variables from a hdf5 requires the hdf5 only to contain a list."
             )

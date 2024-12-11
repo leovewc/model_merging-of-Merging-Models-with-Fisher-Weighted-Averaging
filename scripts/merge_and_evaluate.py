@@ -13,7 +13,6 @@ from model_merging import merging
 
 FLAGS = flags.FLAGS
 
-# TODO: Add descriptions to flags
 flags.DEFINE_list('models', None, 'Comma-separated list of model identifiers from Hugging Face')
 flags.DEFINE_list('fishers', None, 'Comma-separated list of paths to Fisher information files')
 flags.DEFINE_string('glue_task', 'sst-2', 'GLUE task name')

@@ -19,7 +19,6 @@ class Sst2Processor:
 
     def get_example_from_tensor_dict(self, tensor_dict):
         """Converts a TensorFlow tensor dictionary to a simple dict."""
-        # 解码 'sentence' 并提取 'label'
         sentence = tensor_dict["sentence"].numpy().decode('utf-8')
         label = tensor_dict["label"].numpy()
         return {
@@ -29,7 +28,6 @@ class Sst2Processor:
 
     def tfds_map(self, example):
         """Further processes the example if needed."""
-        # 目前不需要额外处理，直接返回
         return example
 
 from transformers.data.processors.glue import (
@@ -39,11 +37,10 @@ from transformers.data.processors.glue import (
     QnliProcessor,
     QqpProcessor,
     RteProcessor,
-    # Sst2Processor,  # 移除 Transformers 的 Sst2Processor 以避免冲突
     StsbProcessor,
     WnliProcessor,
 )
-
+# tasks reference
 _glue_processors = {
     'cola': ColaProcessor,
     'mnli': MnliProcessor,
@@ -51,12 +48,11 @@ _glue_processors = {
     'qnli': QnliProcessor,
     'qqp': QqpProcessor,
     'rte': RteProcessor,
-    'sst-2': Sst2Processor,  # 使用 'sst-2' 作为键
+    'sst-2': Sst2Processor,
     'sts-b': StsbProcessor,
     'wnli': WnliProcessor,
 }
 
-# 手动定义 glue_output_modes，确保包含 'sst-2'
 _glue_output_modes = {
     "cola": "classification",
     "mnli": "classification",
@@ -72,7 +68,6 @@ _glue_output_modes = {
     "hans": "classification",
 }
 
-# 处理 STS-B 任务的相关参数
 _STSB_MIN = 0
 _STSB_MAX = 5
 _STSB_NUM_BINS = 5 * (_STSB_MAX - _STSB_MIN)
@@ -81,7 +76,7 @@ def _to_tfds_task_name(task, split):
     if task == "sts-b":
         task = "stsb"
     elif task == "sst-2":
-        task = "sst2"  # 将 'sst-2' 映射为 TensorFlow Datasets 的 'sst2'
+        task = "sst2"
     elif task == "mnli" and split != "train":
         task = "mnli_matched"
     elif task == "mnli-mm" and split != "train":
@@ -94,7 +89,7 @@ def _convert_dataset_to_features(
     max_length,
     task,
 ):
-    print(f"Converting dataset for task: {task}")  # 调试输出
+    print(f"Converting dataset for task: {task}")
     processor = _glue_processors[task]()
     labels = processor.get_labels()
     output_mode = _glue_output_modes[task]
@@ -112,7 +107,6 @@ def _convert_dataset_to_features(
         example = processor.get_example_from_tensor_dict(example)
         example = processor.tfds_map(example)
 
-        # 根据任务调整输入
         if task == "sst-2":
             inputs = tokenizer.encode_plus(
                 example['sentence'],
@@ -139,7 +133,7 @@ def _convert_dataset_to_features(
 
         if output_mode == "classification":
             if task == "sst-2":
-                label = tf.constant(example['label'], dtype=tf.int64)  # 直接使用整数标签
+                label = tf.constant(example['label'], dtype=tf.int64)
             else:
                 label = label_map[example['label']]
                 label = tf.constant(label, dtype=tf.int64)
@@ -158,7 +152,6 @@ def _convert_dataset_to_features(
         )
         return input_ids, token_type_ids, label
 
-    # 定义 pad_token 和 pad_token_segment_id
     pad_token = tokenizer.pad_token_id
     pad_token_segment_id = tokenizer.pad_token_type_id
 
@@ -166,7 +159,6 @@ def _convert_dataset_to_features(
         # Zero-pad up to the sequence length.
         padding_length = max_length - tf.shape(input_ids)[-1]
 
-        # 将 pad_token 和 pad_token_segment_id 转换为 TensorFlow 常量
         pad_token_tf = tf.constant(pad_token, dtype=tf.int32)
         pad_token_segment_id_tf = tf.constant(pad_token_segment_id, dtype=tf.int32)
 
@@ -182,7 +174,6 @@ def _convert_dataset_to_features(
         )
 
         tf_example = {
-            # 确保形状已知，这在下游步骤中通常是需要的。
             "input_ids": tf.reshape(input_ids, [max_length]),
             "token_type_ids": tf.reshape(token_type_ids, [max_length]),
         }
@@ -194,7 +185,7 @@ def _convert_dataset_to_features(
 
 def load_glue_dataset(task: str, split: str, tokenizer, max_length: int):
     tfds_task = _to_tfds_task_name(task, split)
-    print(f"Loading GLUE task: {task}, tfds_task: {tfds_task}")  # 调试输出
+    print(f"Loading GLUE task: {task}, tfds_task: {tfds_task}")
     ds = tfds.load(f"glue/{tfds_task}", split=split)
     ds = _convert_dataset_to_features(
         ds,

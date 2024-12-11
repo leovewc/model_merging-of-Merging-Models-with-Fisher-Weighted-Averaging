@@ -123,9 +123,6 @@ def get_mergeable_variables(model):
 # def get_mergeable_variables(model):
 #     return get_body_and_head(model)[0].trainable_variables
 
-def get_mergeable_variables(model):
-    body, _ = get_body_and_head(model)
-    return body.trainable_variables
 
 def clone_model(model):
     cloned = model.__class__(model.config)
